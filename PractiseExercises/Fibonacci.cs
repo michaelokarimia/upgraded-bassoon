@@ -6,6 +6,14 @@ namespace PractiseExercises
 {
     public class Fibonacci
     {
+
+        public static void Run()
+        {
+            int n = 40;
+
+            Console.WriteLine("The Fibbonacci Number {0} is {1}", n, Fibonacci.Print(n));
+        }
+
         internal static int Print(int n)
         {
             return runRecursively(n);

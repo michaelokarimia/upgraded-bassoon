@@ -7,9 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            int n = 40;
-
-            Console.WriteLine("The Fibbonacci Number {0} is {1}", n, Fibonacci.Print(n));
+            StockPriceProfitCalculator.Run();
 
             Console.ReadKey();
         }
