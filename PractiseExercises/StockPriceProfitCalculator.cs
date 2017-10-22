@@ -12,7 +12,7 @@ namespace PractiseExercises
         {
             // price of Apple stock yesterday in Dollars, in time order
             //each element represents a minute since market open time, value = price
-            var stockPricesYesterday = new int[] { 100, 10, 7, 5, 8, 11, 9};
+            var stockPricesYesterday = new int[] { 100, 101, 10, 7, 5, 8, 11, 9};
 
             int profit = 0;
 
@@ -37,25 +37,28 @@ namespace PractiseExercises
             }
 
             var maxProfit = 0;
+            var lowest = int.MaxValue;
 
             for (int i = 0; i < stockPricesYesterday.Length; i++)
             {
                 var current = stockPricesYesterday[i];
-                for (int n = i+1; n < stockPricesYesterday.Length; n ++)
+
+                if (current < lowest)
+                    lowest = current;
+
+                int next = 0;
+
+                if (i + 1 < stockPricesYesterday.Length)
+                    next = stockPricesYesterday[i + 1];
+
+                var potentialProfit = current - lowest;
+
+                if (potentialProfit > 0 && potentialProfit > maxProfit)
                 {
-                    var nextPrice = stockPricesYesterday[n];
-
-                    var potentialProfit = nextPrice - current;
-
-                    if (potentialProfit > 0 && potentialProfit > maxProfit)
-                    {
-                        maxProfit = potentialProfit;
-                    }
-
+                    maxProfit = potentialProfit;
                 }
+
             }
-
-
 
             return maxProfit;
         }
