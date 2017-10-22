@@ -8,7 +8,7 @@ namespace PractiseExercises
     {
         internal static int Print(int n)
         {
-            return runReducedMemoryVersion(n);
+            return runRecursively(n);
         }
 
 
@@ -40,14 +40,38 @@ namespace PractiseExercises
             int previous = 1;
             int current = 0;
             
+            // O(n) time complexity, have to run through the loop of numbers in the sequence
+
             for (int i = 2; i < n; i++)
             {
                 current = twoPrevious + previous;
                 twoPrevious = previous;
                 previous = current;
             }
-            
+
+            //only store the current and previous two variables rather than the whole array of previous numbers
+            // O(1) space complexity!
             return current;
+
+        }
+
+        public static int runRecursively(int n)
+        {
+            if (n < 2)
+                return n;
+
+            /* for each execution, run yourself twice(!)
+             * builds call stack as a binary tree, starting at fib(n), with n reducing at each level
+             * when n = 0 you can start to add up values back from fib(n)
+                                        fib(10) =
+                            fib(9)          +               fib(8)
+                   fib(8)    +     fib(7)            fib(7)   +       fib(6)
+            fib(7)  + fib(6)  fib(6) + fib(5)   fib(6) + fib(5)  fib(5) + fib(4)
+            
+            O(2^n) time complexity and space complexity
+            */
+            return runRecursively(n - 1) + runRecursively(n - 2);
+
 
         }
     }
