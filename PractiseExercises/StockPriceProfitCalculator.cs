@@ -23,7 +23,8 @@ namespace PractiseExercises
 
         //Given the stock prices yesterday, return the max profit that could have been made with one purchase and one sale of a share
         //Order sensitive, can only compare prices with future increase.
-        //assumes we do not return a negative number 9 i.e. a loss
+        //assumes we do not return a negative number i.e. a loss
+        //Greedy approch
         private static int getMaxProfit(int[] stockPricesYesterday)
         {
             if( stockPricesYesterday == null)
@@ -39,17 +40,12 @@ namespace PractiseExercises
             var maxProfit = 0;
             var lowest = int.MaxValue;
 
-            for (int i = 0; i < stockPricesYesterday.Length; i++)
+            for (int i = 1; i < stockPricesYesterday.Length; i++)
             {
                 var current = stockPricesYesterday[i];
 
                 if (current < lowest)
                     lowest = current;
-
-                int next = 0;
-
-                if (i + 1 < stockPricesYesterday.Length)
-                    next = stockPricesYesterday[i + 1];
 
                 var potentialProfit = current - lowest;
 
