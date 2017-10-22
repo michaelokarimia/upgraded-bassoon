@@ -7,7 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            StockPriceProfitCalculator.Run();
+            SumOfAllProductsExceptIndex.Run();
 
             Console.ReadKey();
         }
