@@ -6,7 +6,7 @@ namespace PractiseExercises
     {
         internal static void Run()
         {
-            var input = new int[] {  1,7,3,4};
+            var input = new int[] {1,7,3,4};
 
             var output = GetProductsOfAllIntsExceptIndex(input);
 
@@ -17,7 +17,7 @@ namespace PractiseExercises
         }
 
         /// <summary>
-        /// Nested loop, which means O(n^2) complexity
+        /// Greedy Approach O(n) complexity
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -35,21 +35,21 @@ namespace PractiseExercises
 
             var output = new int[input.Length];
 
-            for( int i = 0; i < input.Length; i++)
+            var runningTotal = 1;
+
+            for(int i = 0; i < input.Length; i++)
             {
-                var current = 1;
+                output[i] = runningTotal;
+                
+                runningTotal *= input[i];
+            }
 
-                for (int n = 0; n < input.Length; n++)
-                {
-                    if (i != n)
-                    {
-                        current = current * input[n];
-                    }
-                            
-                }
+            runningTotal = 1;
 
-                output[i] = current;
-
+            for (int i = input.Length -1; i >=0; i--)
+            {
+                output[i] *= runningTotal;
+                runningTotal *= input[i];
             }
 
             return output;
