@@ -7,7 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            SumOfAllProductsExceptIndex.Run();
+            K_ListsSmallestRange.Run();
 
             Console.ReadKey();
         }
