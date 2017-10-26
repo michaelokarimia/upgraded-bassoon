@@ -33,102 +33,82 @@ namespace PractiseExercises
 
     public class IslandCounter
     {
-        static int[][] ocean1 = new int[][] {
-         new int[]{1, 1, 1, 1, 0 },
-         new int[]{1, 1, 0, 1, 0 },
-         new int[]{1, 1, 0, 0, 0 },
-         new int[]{0, 0, 0, 0, 0 }
+        static int[][] map1 = new int[][] {
+         new int[]{ 1,1,1,1,0 },
+         new int[]{ 1,1,0,1,0 },
+         new int[]{ 1,1,0,0,0 },
+         new int[]{ 0,0,0,0,0 }
         };
 
-        static int[][] ocean2 = new int[][] {
-         new int[]{1,1,0,0,0 },
-         new int[]{1,1,0,0,0 },
-         new int[]{0,0,1,0,0 },
-         new int[]{ 0, 0, 0, 1, 1 }
+        static int[][] map2 = new int[][] {
+         new int[]{ 1,1,0,0,0 },
+         new int[]{ 1,1,0,0,0 },
+         new int[]{ 0,0,1,0,0 },
+         new int[]{ 0,0,0,1,1 }
         };
 
         public static void Run()
         {
-            int islandCount = getIslandCount(ocean1);
+            int islandCount = getIslandCount(map2);
 
             Console.WriteLine("There are {0} islands", islandCount);
 
         }
 
-        private static int getIslandCount(int[][] ocean)
+        private static int getIslandCount(int[][] map)
         {
-            if(ocean ==null || ocean.Length < 2 || ocean[0].Length < 2)
+            if(map ==null || map.Length < 2 || map[0].Length < 2)
             {
-                throw new Exception("Invalid ocean dimension");
+                throw new Exception("Invalid map dimension");
             }
             int foundIslandCount = 0;
 
             //traverse each element, 
 
-            //If element value = 1 it's land so check 
-            //checking North, South, East, West for 0  whihc is ocean. If true, then increment island count
+            //If element value = 1 it's land
 
+            //as we scan the array from left to right and top to bottom, if current element is land and north or west element
+            //is land, then we are on contigious land i.e. the same island.
+
+            //should there be land and both north and west are ocean, then there is another island so increment island count
 
             //nestedloop, O(n^2) complexity
-            for (int j = 0; j < ocean.Length; j++)
+            for (int j = 0; j < map.Length; j++)
             {
                 //j represents each row
 
                 //i represents each column
-                for (int i = 0; i < ocean[j].Length; i++)
+                for (int i = 0; i < map[j].Length; i++)
                 {
                     //it's land
-                    if (ocean[j][i].Equals(1))
+                    if (map[j][i].Equals(1))
                     {
-                        bool oceanToNorth, oceanToEast, oceanToSouth, oceanToWest;
+                        bool landToNorth, LandToWest;
 
                         //check north
                         //if j = 0 then north of it will be ocean
                         if (j == 0)
                         {
-                            oceanToNorth = true;
+                            landToNorth = false;
                         }
                         else
                         {
-                            oceanToNorth = (ocean[j - 1][i].Equals(0));
+                            landToNorth = (map[j - 1][i].Equals(1));
                         }
                         
-                        //check if ocean to east
-                        //if at easternmost edge, then it's true
-                        if (i == ocean[j].Length-1)
-                        {
-                            oceanToEast = true;
-                        }
-                        else
-                        {
-                            oceanToEast = (ocean[j][i + 1].Equals(0));
-                        }
-
-                        //check if ocean to south
-                        // if j is at the length then it is ocean
-
-                        if(j == ocean.Length -1)
-                        {
-                            oceanToSouth = true;
-                        }
-                        else
-                        {
-                            oceanToSouth = ocean[j + 1][i].Equals(0);
-                        }
-
                         //checkwest
-                        //if i is 0 then we are at the edge and ocean is to the west
+                        //if i is 0 then we are at the west edge and ocean is to the west
                         if(i == 0)
                         {
-                            oceanToWest = true;
+                            LandToWest = false;
                         }
                         else
                         {
-                            oceanToWest = ocean[j][i - 1].Equals(0);
+                            LandToWest = map[j][i - 1].Equals(1);
                         }
 
-
-                        if(oceanToNorth && oceanToEast && oceanToSouth && oceanToWest)
+                        //if there is no land north or west of current, then we have found a new island
+                        if(!landToNorth && !LandToWest)
                         {
                             foundIslandCount++;
                         }
