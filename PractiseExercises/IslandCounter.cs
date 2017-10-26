@@ -33,6 +33,7 @@ namespace PractiseExercises
 
     public class IslandCounter
     {
+        //one island
         static int[][] map1 = new int[][] {
          new int[]{ 1,1,1,1,0 },
          new int[]{ 1,1,0,1,0 },
@@ -40,6 +41,7 @@ namespace PractiseExercises
          new int[]{ 0,0,0,0,0 }
         };
 
+        //three islands
         static int[][] map2 = new int[][] {
          new int[]{ 1,1,0,0,0 },
          new int[]{ 1,1,0,0,0 },
@@ -47,15 +49,48 @@ namespace PractiseExercises
          new int[]{ 0,0,0,1,1 }
         };
 
-        public static void Run()
+
+        //two islands
+        static int[][] map3 = new int[][] {
+         new int[]{ 1,1,0,0,0 },
+         new int[]{ 1,1,0,0,0 },
+         new int[]{ 0,0,1,0,1 },
+         new int[]{ 0,0,1,1,1 }
+        };
+
+        //one island
+        static int[][] map4 = new int[][] {
+         new int[]{ 0,0,0,1,1 },
+         new int[]{ 0,0,0,0,1 },
+         new int[]{ 0,0,0,1,1 },
+         new int[]{ 0,0,0,0,0 }
+        };
+
+
+        public static void  Run()
         {
-            int islandCount = getIslandCount(map2);
+            IslandCounter counter = new IslandCounter();
+
+            int islandCount = counter.getIslandCount(map3);
 
             Console.WriteLine("There are {0} islands", islandCount);
 
         }
 
-        private static int getIslandCount(int[][] map)
+
+        public class Point
+        {
+            public Point(int x, int y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+
+            public int x;
+            public int y;
+        }
+
+        private int getIslandCount(int[][] map)
         {
             if(map ==null || map.Length < 2 || map[0].Length < 2)
             {
@@ -63,61 +98,93 @@ namespace PractiseExercises
             }
             int foundIslandCount = 0;
 
-            //traverse each element, 
+            //an island is a collection of elements with the value 1 connected NESW to another 1.
+            //can be represented as a linked list
 
-            //If element value = 1 it's land
+            //traverse each element of a map searching for unexplored land.
 
-            //as we scan the array from left to right and top to bottom, if current element is land and north or west element
-            //is land, then we are on contigious land i.e. the same island.
+            //If element value = 1 it's unexplored land 
 
-            //should there be land and both north and west are ocean, then there is another island so increment island count
 
-            //nestedloop, O(n^2) complexity
-            for (int j = 0; j < map.Length; j++)
+            //chart that land, checking NESW to get all the contigious land, until there is no more connected land
+            //set the value of the coordinate of the discovered land on the map to 2, so we don't count it twice.
+
+            //Each coordinate should be added to linked list. Push these coordinates into a stack 
+            //once all connected land has been checked, exit method 
+
+
+            //Then traverse the next coordinate on the map, till you reach the end.
+
+            var start = new Point(0, 0);
+
+
+            while((start = getUnchartedCoordinates(start,map)) != null)
             {
-                //j represents each row
+                markIslandAsVisited(map, start);
 
-                //i represents each column
-                for (int i = 0; i < map[j].Length; i++)
-                {
-                    //it's land
-                    if (map[j][i].Equals(1))
-                    {
-                        bool landToNorth, LandToWest;
-
-                        //check north
-                        //if j = 0 then north of it will be ocean
-                        if (j == 0)
-                        {
-                            landToNorth = false;
-                        }
-                        else
-                        {
-                            landToNorth = (map[j - 1][i].Equals(1));
-                        }
-                        
-                        //checkwest
-                        //if i is 0 then we are at the west edge and ocean is to the west
-                        if(i == 0)
-                        {
-                            LandToWest = false;
-                        }
-                        else
-                        {
-                            LandToWest = map[j][i - 1].Equals(1);
-                        }
-
-                        //if there is no land north or west of current, then we have found a new island
-                        if(!landToNorth && !LandToWest)
-                        {
-                            foundIslandCount++;
-                        }
-                    }
-                }
-
+                foundIslandCount++;
             }
 
+            
             return foundIslandCount;
+        }
+
+        private void markIslandAsVisited(int[][] map, Point start)
+        {
+            Stack<Point> toVist = new Stack<Point>();
+
+            toVist.Push(start);
+
+            //check all points to visit
+            while (toVist.Count > 0)
+            {
+                var current = toVist.Pop();
+
+                //if N is uncharted and not at the N edge of map, then add to list of exploration
+                if (current.y > 0 && map[current.y - 1][current.x] == 1)
+                {
+                    toVist.Push(new Point(current.x, current.y - 1));
+                }
+
+                //if E is uncharted, and not at the E edge of map, then add to list of exploration
+                if (current.x < map[current.y].Length-1 && map[current.y][current.x + 1] == 1)
+                {
+                    toVist.Push(new Point(current.x + 1, current.y));
+                }
+
+                //if S is uncharted, and not at the S edge of map, then add to list of exploration
+                if (current.y < map.Length-1 && map[current.y+1][current.x] == 1)
+                {
+                    toVist.Push(new Point(current.x, current.y + 1));
+                }
+
+                //if W is uncharted and not at the W edge of map, the add to list of exploration
+                if(current.x > 0 && map[current.y][current.x-1] == 1)
+                {
+                    toVist.Push(new Point(current.x - 1, current.y));
+                }
+
+                //mark coord as visited
+                map[current.y][current.x] = 2;
+
+            }
+        }
+
+        //given the map and start point, traverse every element on the map
+        //return the point coordinate if there is uncharted land
+        //else null when whole map has been charted
+        private static Point getUnchartedCoordinates(Point start, int[][] map)
+        {
+            for(int i = start.y; i< map.Length; i++)
+            {
+                for (int j = start.x; j < map[i].Length; j++)
+                {
+                    if (map[i][j] == 1)
+                    { return new Point(j, i); }
+                }
+            }
+
+            return null;
         }
     }
 }
