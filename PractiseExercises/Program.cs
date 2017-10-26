@@ -7,7 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            K_ListsSmallestRange.Run();
+            IslandCounter.Run();
 
             Console.ReadKey();
         }
