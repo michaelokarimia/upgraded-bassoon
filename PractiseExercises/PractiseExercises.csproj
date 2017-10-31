@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockPriceProfitCalculator.cs" />
     <Compile Include="SumOfAllProductsExceptIndex.cs" />
+    <Compile Include="TreeChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

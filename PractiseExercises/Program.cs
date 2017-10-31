@@ -7,7 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            Linter.Run();
+            TreeChecker.Run();
             
             Console.ReadKey();
         }
