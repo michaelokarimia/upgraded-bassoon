@@ -7,8 +7,8 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            IslandCounter.Run();
-
+            Linter.Run();
+            
             Console.ReadKey();
         }
     }
