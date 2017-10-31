@@ -15,8 +15,10 @@ namespace PractiseExercises
         {
             var rootNode = new Node();
 
-            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node(), new Node() } } };
+            rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node(), new Node() } } };
             rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node() } } };
+            rootNode.Children = new List<Node>();
+            rootNode.Children = new List<Node>() { new Node { Children = { new Node(), new Node { Children = { new Node(), new Node() } } } }, new Node()   }  ;
 
 
             bool isTree = GetIfItIsATree(rootNode);
@@ -50,7 +52,7 @@ namespace PractiseExercises
             return isBalanced;
         }
 
-        //depth first search implmentation
+        //breath first search implmentation
         private static bool GetIfItIsATree(Node rootNode)
         {
             if (rootNode == null)
@@ -59,30 +61,21 @@ namespace PractiseExercises
             //traverse all children nodes in root node
             //tree has only 0,1 or 2 child nodes it's binary
 
-            var stack = new Stack<Node>();
+            Queue<Node> q = new Queue<Node>();
 
-            stack.Push(rootNode);
-            //traverse all nodes and push them onto a stack
+            q.Enqueue(rootNode);
 
-            while (stack.Count > 0)
+            while (q.Count > 0)
             {
-                if (stack.Peek() == null)
+                var current = q.Dequeue();
+
+                if (current.Children.Count > 2)
+                { return false; }
+
+                foreach(Node node in current.Children)
                 {
-                    break;
+                    q.Enqueue(node);   
                 }
-
-                var currentNode = stack.Pop();
-
-                //non binary tree to exit now
-                if (currentNode.Children.Count > 2)
-                    return false;
-
-                //if there are any children. push them onto to stack for evaluation
-                foreach (Node node in currentNode.Children)
-                {
-                    stack.Push(node);
-                }
-
             }
 
             return true;
