@@ -8,28 +8,46 @@ namespace PractiseExercises
     {
         public class Node
         {
-            public List<Node> Children { get; set; } = new List<Node>(); 
+            public List<Node> Children { get; set; } = new List<Node>();
         }
 
         internal static void Run()
         {
             var rootNode = new Node();
 
-            rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node(), new Node() } } };
-            rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node() } } };
-            rootNode.Children = new List<Node>();
-            rootNode.Children = new List<Node>() { new Node { Children = { new Node(), new Node { Children = { new Node(), new Node() } } } }, new Node()   }  ;
-
+            rootNode.Children = new List<Node>()
+                { new Node
+                    { Children =
+                        {
+                         new Node {
+                            Children = new List<Node>() {
+                                new Node(),
+                                }
+                            },
+                         
+                            new Node {
+                                Children = new List<Node>() {
+                                    new Node(),
+                                    new Node()
+                                    }
+                                }
+                                
+                            }
+                        }
+                };
+            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node(), new Node() } } };
+            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node() } } };
+            //rootNode.Children = new List<Node>();
+            //rootNode.Children = new List<Node>() { new Node { Children = { new Node(), new Node { Children = { new Node(), new Node() } } } }, new Node()   }  ;
+            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node() { Children = { new Node() } } } } };
 
             bool isTree = GetIfItIsATree(rootNode);
 
             Console.WriteLine("It is{0}a binary tree", (isTree) ? " " : " not ");
 
-            BinaryTree binaryTree = new BinaryTree("home");
 
 
-
-            bool isBalanced = (isTree) ? GetIfTreeIsBalanced(binaryTree) : false;
+            bool isBalanced = (isTree) ? GetIfTreeIsBalanced(rootNode) : false;
 
             Console.WriteLine("It is{0}a balanced binary tree", (isBalanced) ? " " : " not ");
 
@@ -42,14 +60,55 @@ namespace PractiseExercises
         /// </summary>
         /// <param name="rootNode"></param>
         /// <returns></returns>
-        private static bool GetIfTreeIsBalanced(BinaryTree rootNode)
+        private static bool GetIfTreeIsBalanced(Node rootNode)
         {
-            bool isBalanced = false;
+            //traverse all nodes in this binary tree depth first
 
-            //traverse all nodes in this binary tree
+            var stack = new Stack<Node>();
+
+            stack.Push(rootNode);
+
+            var currentDepth = 0;
+
+            var shallowestLeaf = int.MaxValue;
+            var deepestLeaf = 0;
+
+
+            while(stack.Count > 0)
+            {
+                var current = stack.Pop();
+
+                //leaf node
+                if(current.Children.Count == 0)
+                {
+                    currentDepth++;
+                    if(currentDepth < shallowestLeaf)
+                    {
+                        shallowestLeaf = currentDepth;
+                    }
+
+                    if (currentDepth > deepestLeaf)
+                    {
+                        deepestLeaf = currentDepth;
+                    }
+                }
+
+                foreach(Node node in current.Children)
+                {
+                    stack.Push(node);
+                }
+
+            }
+
+
+            if (deepestLeaf - shallowestLeaf > 2)
+            {
+                return false;
+            }
+            else
+            { return true; }
 
            
-            return isBalanced;
         }
 
         //breath first search implmentation
