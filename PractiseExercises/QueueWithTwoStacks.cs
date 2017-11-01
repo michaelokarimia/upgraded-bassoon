@@ -72,6 +72,52 @@ namespace PractiseExercises
 
         }
 
+        [Test]
+        public void EnqueueFourItemsAndDequeueThemAll()
+        {
+            var firstInt = 1;
+            var secondInt = 2;
+            var thirdInt = 3;
+            var fourthInt = 4;
+
+            subject.Enqueue(firstInt);
+            subject.Enqueue(secondInt);
+            subject.Enqueue(thirdInt);
+            subject.Enqueue(fourthInt);
+
+
+            Assert.That(subject.Dequeue, Is.EqualTo(firstInt));
+
+            Assert.That(subject.Dequeue(), Is.EqualTo(secondInt));
+            Assert.That(subject.Dequeue(), Is.EqualTo(thirdInt));
+            Assert.That(subject.Dequeue(), Is.EqualTo(fourthInt));
+
+
+        }
+
+
+        [Test]
+        public void EnqueueAndDequueFourItems()
+        {
+            var firstInt = 1;
+            var secondInt = 2;
+            var thirdInt = 3;
+            var fourthInt = 4;
+
+            subject.Enqueue(firstInt);
+            subject.Enqueue(secondInt);
+
+            Assert.That(subject.Dequeue, Is.EqualTo(firstInt));
+
+            Assert.That(subject.Dequeue(), Is.EqualTo(secondInt));
+            subject.Enqueue(thirdInt);
+            subject.Enqueue(fourthInt);
+            Assert.That(subject.Dequeue(), Is.EqualTo(thirdInt));
+            Assert.That(subject.Dequeue(), Is.EqualTo(fourthInt));
+
+
+        }
+
     }
 
     internal class OkarimiaQueue<T>
@@ -97,17 +143,23 @@ namespace PractiseExercises
             if (Count == 0)
                 throw new InvalidOperationException();
 
-            Count--;
-            var result = headStack.Pop();
+            T result;
 
-            if (headStack.Count == 0 && tailStack.Count > 0)
+            Count--;
+
+            if (headStack.Count > 0)
             {
-                //pull the bottom of tail stack into the headstack
-                if(tailStack.Count == 1)
+                result = headStack.Pop();
+            }
+            else //headstack is empty and must be filled from tailstack
+            {
+                //reverse the entire of tailstack into headstack
+                while(tailStack.Count > 0)
                 {
                     headStack.Push(tailStack.Pop());
                 }
 
+                result = headStack.Pop();
             }
 
             return result;
@@ -125,25 +177,9 @@ namespace PractiseExercises
             { //headstack is has items. 
 
                 //if tailstack is empty just push new value there
-                if (tailStack.Count == 0)
-                {
-                    tailStack.Push(value);
-                }
-                else
-                { //both head and tail have items
 
-                    //add the top of the tail stack to the bottom of the head stack
+                tailStack.Push(value);
 
-                    var topOfTail = tailStack.Pop();
-
-                    var topOfHead = headStack.Pop();
-
-                    headStack.Push(topOfTail);
-                    headStack.Push(topOfHead);
-
-                    //now push the new value to the tailstack
-                    tailStack.Push(value);
-                }
             }
 
             Count++;
