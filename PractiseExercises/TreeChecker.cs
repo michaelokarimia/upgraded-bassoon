@@ -19,13 +19,9 @@ namespace PractiseExercises
 
             BinaryTree tree = new BinaryTree('#');
             
-
-
-
-
             bool IsBalanced = false;
 
-            tree = BuildTreeWithHeightDiffOfTwo();
+            tree = BuildUnbalancedTree();
 
             IsBalanced = getIfTreeBalanced(tree);
 
@@ -113,11 +109,8 @@ namespace PractiseExercises
             if (tree == null)
                 return false;
 
-            var leftHeight = getHeight(tree.Left);
-            var rightHeight = getHeight(tree.Right);
-    
+            return getHeight(tree) != int.MinValue;
 
-            return (leftHeight == rightHeight);
         }
 
         private static int getHeight(BinaryTree tree)
@@ -125,7 +118,26 @@ namespace PractiseExercises
             if (tree == null)
                 return -1;
 
-            return Math.Max(getHeight(tree.Left), getHeight(tree.Right)) + 1;
+            //early exit if a node's two subtree heights are different by more than one
+            //this removes the need to recursively traverse the entire tree
+            var leftHeight = getHeight(tree.Left);
+            
+            //min value is used to denote an unbalanced subtree exists, if we see it, pass it up to the call stack
+            //and stop traversing
+            if (leftHeight == int.MinValue)
+                return int.MinValue;
+
+            var rightHeight = getHeight(tree.Right);
+
+            //stop traversing and pass min value up the call stack
+            if (rightHeight == int.MinValue)
+                return int.MinValue;
+
+            if (Math.Abs(leftHeight - rightHeight) > 1)
+                return int.MinValue;
+
+            //otherwise, return the true height
+            return Math.Max(leftHeight, rightHeight) + 1;
         }
 
         private class BinaryTree
