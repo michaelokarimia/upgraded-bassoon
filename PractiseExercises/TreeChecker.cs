@@ -1,144 +1,131 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace PractiseExercises
 {
     internal class TreeChecker
     {
-        public class Node
+         
+
+
+
+
+        public static void Run()
         {
-            public List<Node> Children { get; set; } = new List<Node>();
-        }
 
-        internal static void Run()
-        {
-            var rootNode = new Node();
+            ///* Given a binary tree, check if it is balanced
+            ///Balanced is taken to be a tree such that the heights of the two subtrees of any node
+            ///never differ by more that one
+            ///
 
-            rootNode.Children = new List<Node>()
-                { new Node
-                    { Children =
-                        {
-                         new Node {
-                            Children = new List<Node>() {
-                                new Node(),
-                                }
-                            },
-                         
-                            new Node {
-                                Children = new List<Node>() {
-                                    new Node(),
-                                    new Node()
-                                    }
-                                }
-                                
-                            }
-                        }
-                };
-            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node(), new Node() } } };
-            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node() } } };
-            //rootNode.Children = new List<Node>();
-            //rootNode.Children = new List<Node>() { new Node { Children = { new Node(), new Node { Children = { new Node(), new Node() } } } }, new Node()   }  ;
-            //rootNode.Children = new List<Node>() { new Node { }, new Node() { Children = new List<Node>() { new Node(), new Node() { Children = { new Node() } } } } };
-
-            bool isTree = GetIfItIsATree(rootNode);
-
-            Console.WriteLine("It is{0}a binary tree", (isTree) ? " " : " not ");
+            BinaryTree tree = new BinaryTree('#');
+            
 
 
 
-            bool isBalanced = (isTree) ? GetIfTreeIsBalanced(rootNode) : false;
 
-            Console.WriteLine("It is{0}a balanced binary tree", (isBalanced) ? " " : " not ");
+            bool IsBalanced = false;
 
+            tree = BuildTreeWithHeightDiffOfTwo();
 
+            IsBalanced = getIfTreeBalanced(tree);
+
+            Console.WriteLine("Tree is{0}balanced", (IsBalanced) ? " " : " not ");
 
         }
 
-        /// <summary>
-        /// Balanced means that the height between the shallowest and deepest nodes will not exceed 1
-        /// </summary>
-        /// <param name="rootNode"></param>
-        /// <returns></returns>
-        private static bool GetIfTreeIsBalanced(Node rootNode)
+        private static BinaryTree BuildTreeWithHeightDiffOfOne()
         {
-            //traverse all nodes in this binary tree depth first
+            var root = new BinaryTree(1);
 
-            var stack = new Stack<Node>();
+            var treeLeft = root.AddLeft(3);
+            var treeRight = root.AddRight(4);
 
-            stack.Push(rootNode);
+            var leftleft = treeLeft.AddLeft(6);
+            var leftRight = treeLeft.AddRight(9);
 
-            var currentDepth = 0;
-
-            var shallowestLeaf = int.MaxValue;
-            var deepestLeaf = 0;
-
-
-            while(stack.Count > 0)
-            {
-                var current = stack.Pop();
-
-                //leaf node
-                if(current.Children.Count == 0)
-                {
-                    currentDepth++;
-                    if(currentDepth < shallowestLeaf)
-                    {
-                        shallowestLeaf = currentDepth;
-                    }
-
-                    if (currentDepth > deepestLeaf)
-                    {
-                        deepestLeaf = currentDepth;
-                    }
-                }
-
-                foreach(Node node in current.Children)
-                {
-                    stack.Push(node);
-                }
-
-            }
+            treeRight.AddLeft(11);
+            var rightright = treeRight.AddRight(19);
+            var rightrightright = rightright.AddRight(21);
 
 
-            if (deepestLeaf - shallowestLeaf > 2)
-            {
-                return false;
-            }
-            else
-            { return true; }
+            var leftleftleft = leftleft.AddLeft(17);
 
-           
+
+            leftleftleft.AddLeft(5);
+
+            return root;
         }
 
-        //breath first search implmentation
-        private static bool GetIfItIsATree(Node rootNode)
+        private static BinaryTree BuildTreeWithHeightDiffOfTwo()
         {
-            if (rootNode == null)
+            var root = new BinaryTree(1);
+
+            var treeLeft = root.AddLeft(3);
+            var treeRight = root.AddRight(4);
+
+            var leftleft = treeLeft.AddLeft(6);
+            var leftRight = treeLeft.AddRight(9);
+
+            treeRight.AddLeft(11);
+            treeRight.AddRight(19);
+
+            var leftleftleft = leftleft.AddLeft(17);
+
+            leftleftleft.AddLeft(5);
+
+            return root;
+        }
+
+        private static BinaryTree BuildBalancedTree()
+        {
+
+            var balancedTreeHeight2 = new BinaryTree(1);
+
+            var blancedTreeleft = balancedTreeHeight2.AddLeft(3);
+            var balancedTreeRight = balancedTreeHeight2.AddRight(4);
+
+            blancedTreeleft.AddLeft(6);
+            blancedTreeleft.AddRight(9);
+
+            balancedTreeRight.AddLeft(11);
+            balancedTreeRight.AddRight(19);
+
+            return balancedTreeHeight2;
+        }
+
+        private static BinaryTree BuildUnbalancedTree()
+        {
+            var  unbalanced = new BinaryTree(1);
+
+            var unblancedTreeleft = unbalanced.AddLeft(3);
+
+            var leftleft = unblancedTreeleft.AddLeft(6);
+            unblancedTreeleft.AddRight(9);
+
+            leftleft.AddLeft(11);
+            leftleft.AddRight(19);
+
+            return unbalanced;
+        }
+
+        private static bool getIfTreeBalanced(BinaryTree tree)
+        {
+            if (tree == null)
                 return false;
 
-            //traverse all children nodes in root node
-            //tree has only 0,1 or 2 child nodes it's binary
+            var leftHeight = getHeight(tree.Left);
+            var rightHeight = getHeight(tree.Right);
+    
 
-            Queue<Node> q = new Queue<Node>();
+            return (leftHeight == rightHeight);
+        }
 
-            q.Enqueue(rootNode);
+        private static int getHeight(BinaryTree tree)
+        {
+            if (tree == null)
+                return -1;
 
-            while (q.Count > 0)
-            {
-                var current = q.Dequeue();
-
-                if (current.Children.Count > 2)
-                { return false; }
-
-                foreach(Node node in current.Children)
-                {
-                    q.Enqueue(node);   
-                }
-            }
-
-            return true;
-
+            return Math.Max(getHeight(tree.Left), getHeight(tree.Right)) + 1;
         }
 
         private class BinaryTree
@@ -165,5 +152,13 @@ namespace PractiseExercises
             }
 
         }
+
+
+        
+
+
+
+
+       
     }
 }
