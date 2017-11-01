@@ -7,7 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            TreeChecker.Run();
+            QueueWithTwoStacks.Run();
             
             Console.ReadKey();
         }
