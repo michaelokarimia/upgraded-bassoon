@@ -140,29 +140,23 @@ namespace PractiseExercises
 
         internal T Dequeue()
         {
+            //nothing in the queue, so throw
             if (Count == 0)
                 throw new InvalidOperationException();
 
-            T result;
-
-            Count--;
-
-            if (headStack.Count > 0)
-            {
-                result = headStack.Pop();
-            }
-            else //headstack is empty and must be filled from tailstack
-            {
+            if (headStack.Count == 0)
+            { //headstack is empty and must be filled from tailstack
+            
                 //reverse the entire of tailstack into headstack
                 while(tailStack.Count > 0)
                 {
                     headStack.Push(tailStack.Pop());
                 }
-
-                result = headStack.Pop();
             }
 
-            return result;
+            Count--;
+
+            return headStack.Pop();
             
         }
 
@@ -174,12 +168,9 @@ namespace PractiseExercises
                 headStack.Push(value);
             }
             else
-            { //headstack is has items. 
-
-                //if tailstack is empty just push new value there
+            { // push new value to tailstack for later reversal into headstack 
 
                 tailStack.Push(value);
-
             }
 
             Count++;
