@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Anagrams.cs" />
     <Compile Include="Fibonacci.cs" />
     <Compile Include="IslandCounter.cs" />
     <Compile Include="K_ListsSmallestRange.cs" />

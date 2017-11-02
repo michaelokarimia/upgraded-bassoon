@@ -7,7 +7,7 @@ namespace PractiseExercises
         static void Main(string[] args)
         {
 
-            QueueWithTwoStacks.Run();
+            Anagrams.Run();
             
             Console.ReadKey();
         }
