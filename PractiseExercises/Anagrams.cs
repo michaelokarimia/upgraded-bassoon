@@ -23,7 +23,19 @@ namespace PractiseExercises
             */
             string[] wordsToCheck = new string[] { "eat", "tan", "ate", "nat", "bat", "tea", "pong", "rats","star", "live", "evil" };
 
-            var outputWords = GetListOfAnagrams(wordsToCheck);
+            var outputWords = new List<List<string>>();
+                
+
+            var dictionary = GetListOfAnagrams(wordsToCheck);
+
+            foreach (var item in dictionary)
+            {
+                var strList = new List<string>();
+
+                strList.AddRange(item.Value);
+
+                outputWords.Add(strList);
+            }
 
 
             foreach (var wordlist in outputWords)
@@ -41,7 +53,7 @@ namespace PractiseExercises
 
         }
 
-        private static List<List<string>> GetListOfAnagrams(string[] wordsToCheck)
+        private static Dictionary<string, string[]> GetListOfAnagrams(string[] wordsToCheck)
         {
             if(wordsToCheck == null || wordsToCheck.Length < 2)
             { throw new ArgumentNullException(); }
@@ -49,8 +61,6 @@ namespace PractiseExercises
             Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>();
 
             List<List<string>> resultList = new List<List<string>>(); 
-
-            var previous = "";
 
             for(int i = 0; i< wordsToCheck.Length; i++)
             {
@@ -72,76 +82,34 @@ namespace PractiseExercises
                     sortedCurrentWord += c;
                 }
 
-                //only check if there is a previous
-                if (!string.IsNullOrEmpty(previous))
+                // dictonaray key match means there's an anagram already
+                if (dictionary.ContainsKey(sortedCurrentWord))
                 {
-                    if(IsAnagram(previous, current) || dictionary.ContainsKey(sortedCurrentWord))
-                    {
-                        //should already be in the list do retrieve it and add the new word to the string array 
-                        var oldStrArr = dictionary[sortedCurrentWord];
+                    //should already be in the list so retrieve it and add the new word to the string array 
+                    var oldStrArr = dictionary[sortedCurrentWord];
 
-                        //expand new array to be one element larger
-                        var replacementStrArr = new string[oldStrArr.Length + 1];
+                    //expand new array to be one element larger
+                    var replacementStrArr = new string[oldStrArr.Length + 1];
 
-                        oldStrArr.CopyTo(replacementStrArr, 0);
+                    oldStrArr.CopyTo(replacementStrArr, 0);
 
-                        //put new element on the end
-                        replacementStrArr[replacementStrArr.Length - 1] = current;
+                    //put new element on the end
+                    replacementStrArr[replacementStrArr.Length - 1] = current;
 
-                        dictionary[sortedCurrentWord] = replacementStrArr;
+                    dictionary[sortedCurrentWord] = replacementStrArr;
 
-                    }
                 }
-                
-                //add the new item to dict with it's sorted word as the key
-                if (!dictionary.ContainsKey(sortedCurrentWord))
-                {
+                else
+                {   // it's a new word so add the word as new item to dict with it's sorted chars as the key
                     dictionary.Add(sortedCurrentWord, new string[] { current });
                 }
 
-                previous = current;
             }
 
-            foreach(var item in dictionary)
-            {
-                var strList = new List<string>();
+          
 
-                strList.AddRange(item.Value);
-
-                resultList.Add(strList);
-            }
-
-            return resultList;
+            return dictionary;
         }
-
-        public static bool IsAnagram(string firstWord, string secondWord)
-        {
-            bool areAnagrams = false;
-
-            if(firstWord.Length != secondWord.Length)
-            {
-                return false;
-            }
-
-            var sortedFirstWord = new List<char>();
-
-            sortedFirstWord.AddRange(firstWord.ToCharArray());
-
-            sortedFirstWord.Sort();
-
-            var sortedSecondWord = new List<char>();
-
-            sortedSecondWord.AddRange(secondWord.ToCharArray());
-
-            sortedSecondWord.Sort();
-
-            areAnagrams = (sortedFirstWord == sortedSecondWord);
-
-            return areAnagrams;
-                 
-
-        }
-
     }
     
 }
